@@ -1,0 +1,68 @@
+{% extends 'gtt/base.html' %}
+
+{% block title %}
+    TITLE
+{% endblock %}
+
+{% block content %}
+    {% load staticfiles %}
+{#    {% for article in articles %}#}
+{#        <h3><a href="{% url 'article' article.id %}">{{ article.title }}</a></h3>#}
+{#        <p>{{ article.get_short_text }}</p>#}
+{#        <br />#}
+{#    {% endfor %}#}
+    <div id="map" style="height: 500px; width: 1000px;">
+    </div>
+    <div style="z-index: 1000">
+        {{ data }}
+    </div>
+    <script type="text/javascript"><!--
+        $(document).ready(function () {
+            var map = kartograph.map('#map');
+            map.loadMap("{% static 'gtt/maps/wrld.svg' %}", function(){
+                map.addLayer('countries', {
+                    styles: {
+                        stroke: '#aaa',
+                        fill: 'grey'
+                    },
+                    click: function (d, path) {
+{#                        for (var pth in this.getLayer('countries').getPaths()){#}
+{#                            pth.animate({fill: '#00'+(Math.floor(Math.random() * (255 - 128 + 1)) + 128)+'00'}, 200);#}
+{#                        }#}
+
+                        pth = path;
+                        while(pth.next){
+                            pth.next.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);
+                            pth = pth.next;
+                        }
+                        while(pth.prev){
+                            pth.prev.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);
+                            pth = pth.prev;
+                        }
+                        path.animate({fill: 'purple'}, 200);
+
+                    },
+                    mouseenter: function (d, path) {
+                        if(path.attr('fill')!='purple') {
+                            path.attr('fill', 'blue');
+                        }
+                    },
+                    mouseleave: function (d, path) {
+                        if(path.attr('fill')!='purple'){
+                            path.animate({fill: 'grey'}, 200);
+                        }
+                    }
+                });
+            });
+{#            map.getLayer('countries')#}
+{#            .on('click', function(data, path, event) {#}
+{#                // do something nice#}
+{#                for (var pth in this.getLayer('countries').getPaths()){#}
+{#                            pth.animate({fill: '#00'+(Math.floor(Math.random() * (255 - 128 + 1)) + 128)+'00'}, 200);#}
+{#                        }#}
+{#                        path.animate({fill: 'purple'}, 200);#}
+{#            });#}
+
+        });
+    --></script>
+{% endblock %}
