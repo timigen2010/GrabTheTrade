@@ -11,8 +11,8 @@
 {#        <p>{{ article.get_short_text }}</p>#}
 {#        <br />#}
 {#    {% endfor %}#}
-    <div id="map" style="height: 500px; width: 1000px;">
-    </div>
+    <div id="map" style="height: 98%; width: 98%"></div>
+    <button id="startGrab">Grab The Trade</button>
     <div style="z-index: 1000">
         {{ data }}
     </div>
@@ -51,6 +51,19 @@
                         if(path.attr('fill')!='purple'){
                             path.animate({fill: 'grey'}, 200);
                         }
+                    }
+                });
+            });
+
+            $('#startGrab').on('click', function () {
+                $.ajax({
+                    url: {% url 'data' %},
+                    type: 'get', // This is the default though, you don't actually need to always mention it
+                    success: function(data) {
+                        alert(data);
+                    },
+                    failure: function(data) {
+                        alert('Got an error dude');
                     }
                 });
             });
