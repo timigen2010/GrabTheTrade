@@ -19,6 +19,7 @@ def article(request, article_id):
 
 
 def data(request):
-    result = Data.grab_the_site()
+    data = Data()
+    result = data.grab_the_site()
     return render(request, 'gtt/home.html', {'data': result})
 

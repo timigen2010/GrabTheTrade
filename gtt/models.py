@@ -6,8 +6,11 @@ from urllib import request
 from pprint import pprint
 from django.conf import settings
 from random import choice
-from multiprocessing import Pool
 import re
+from multiprocessing import Pool
+from itertools import repeat
+
+
 
 
 # Create your models here.
@@ -110,13 +113,90 @@ class Article(models.Model):
 class Data(models.Model):
     text = models.TextField()
 
+    # @staticmethod
+    # def multi_grab_partner(self, partner, dir_types, language, user_agents, proxies, resource):
+
+
     @staticmethod
-    def grab_the_site():
+    def multi_grab_country(x):
+
+        print(x)
+        return x*2
+        # for partner in countries_code:
+        #     for dir_type in dir_types:
+        #         url = "http://www.trademap.org/tradestat/Bilateral_TS.aspx?nvpm=" + str(language) \
+        #               + "|" + str(country).rjust(3, '0') + "||" \
+        #               + str(partner).rjust(3, '0') + "||TOTAL|||2|1|1|" \
+        #               + str(dir_type) + "|2|1|1|1|1"
+        #
+        #         try:
+        #             req = request.Request(url)
+        #             req.add_header('User-Agent', choice(user_agents))
+        #
+        #             page = request.urlopen(req)
+        #
+        #             doc = html.document_fromstring(page.read())
+        #             allok = 1
+        #             print('duple success')
+        #         except:
+        #             allok = 0
+        #             print('site cut')
+        #
+        #         while not allok:
+        #             try:
+        #                 proxy = {'http': 'http://' + choice(proxies)}
+        #
+        #                 req = request.Request(url)
+        #                 req.add_header('User-Agent', choice(user_agents))
+        #
+        #                 opener = request.build_opener(request.ProxyHandler(proxy))
+        #                 request.install_opener(opener)
+        #
+        #                 page = request.urlopen(req)
+        #
+        #                 doc = html.document_fromstring(page.read())
+        #                 allok = 1
+        #                 print('new success')
+        #             except:
+        #                 allok = 0
+        #                 print('bad server error')
+        #
+        #         elements = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(4) td[title="Direct Data"]')
+        #         years = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(3) th a')
+        #         temp = []
+        #         for i in range(len(elements)):
+        #             temp.append({
+        #                 'country': doc.cssselect('#ctl00_NavigationControl_DropDownList_Country >'
+        #                                          + ' option:checked')[0].text_content(),
+        #                 'partner': doc.cssselect('#ctl00_NavigationControl_DropDownList_Partner >'
+        #                                          + ' option:checked')[0].text_content(),
+        #                 'dir_type': dir_type,
+        #
+        #                 'year': years[i].text_content()[-4:],
+        #
+        #                 'value': elements[i].text_content()
+        #             })
+        #         pprint(temp)
+        #
+        #         if temp:
+        #             country_obj, created = Country.country.get_or_create(code=temp[0]['country'])
+        #             partner_obj, created = Country.country.get_or_create(code=temp[0]['partner'])
+        #             dir_type_obj = DirectionType.objects.get(id=temp[0]['dir_type'])
+        #
+        #             if country and partner and dir_type:
+        #                 ti = TradeInfo.info.add_trade_info(resource, country_obj, partner_obj, dir_type_obj,
+        #                                                    int(temp[0]['year']),
+        #                                                    float(re.sub(r"[,]", "", temp[-1]['value']))*1000, 1)
+
+                    # asvesdo.append(temp)
+
+    def grab_the_site(self):
+        from .tasks import countries_counting
         template = Template.template.add_template('mmm')
         template.save()
         resource = Resource.resource.add_resource('mmm', 'http://www.trademap.org/', template)
         resource.save()
-        countries_code = [x for x in range(4, 717, 1)]
+        countries_code = [x for x in range(1000)]
         language = 1
         dir_types = [1, 2, 4]
         asvesdo = []
@@ -133,72 +213,22 @@ class Data(models.Model):
         for ip in ips:
             proxies.append(ip.text_content())
 
+        # for result in countries_code:
+        #     print(result)
+        # results = []
+        #
+        # p = Pool()
+        # result = p.starmap_async(Data.multi_grab_country, countries_code)
+
+        # print(result.get(5))
+        # p.close()
+        # p.join()
+
         for country in countries_code:
-            for partner in countries_code:
-                for dir_type in dir_types:
-                    url = "http://www.trademap.org/tradestat/Bilateral_TS.aspx?nvpm=" + str(language) \
-                          + "|" + str(country).rjust(3, '0') + "||" \
-                          + str(partner).rjust(3, '0') + "||TOTAL|||2|1|1|" \
-                          + str(dir_type) + "|2|1|1|1|1"
+            countries_counting.delay(country, countries_code, resource, language, dir_types, user_agents, proxies)
 
-                    try:
-                        req = request.Request(url)
-                        req.add_header('User-Agent', choice(user_agents))
 
-                        page = request.urlopen(req)
-
-                        doc = html.document_fromstring(page.read())
-                        allok = 1
-                        print('duple success')
-                    except:
-                        allok = 0
-                        print('site cut')
-
-                    while not allok:
-                        try:
-                            proxy = {'http': 'http://' + choice(proxies)}
-
-                            req = request.Request(url)
-                            req.add_header('User-Agent', choice(user_agents))
-
-                            opener = request.build_opener(request.ProxyHandler(proxy))
-                            request.install_opener(opener)
-
-                            page = request.urlopen(req)
-
-                            doc = html.document_fromstring(page.read())
-                            allok = 1
-                            print('new success')
-                        except:
-                            allok = 0
-                            print('bad server error')
-
-                    elements = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(4) td[title="Direct Data"]')
-                    years = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(3) th a')
-                    temp = []
-                    for i in range(len(elements)):
-                        temp.append({
-                            'country': doc.cssselect('#ctl00_NavigationControl_DropDownList_Country >'
-                                                     + ' option:checked')[0].text_content(),
-                            'partner': doc.cssselect('#ctl00_NavigationControl_DropDownList_Partner >'
-                                                     + ' option:checked')[0].text_content(),
-                            'dir_type': dir_type,
-
-                            'year': years[i].text_content()[-4:],
-
-                            'value': elements[i].text_content()
-                        })
-                    pprint(temp)
-
-                    if temp:
-                        country_obj, created = Country.country.get_or_create(code=temp[0]['country'])
-                        partner_obj, created = Country.country.get_or_create(code=temp[0]['partner'])
-                        dir_type_obj = DirectionType.objects.get(id=temp[0]['dir_type'])
-
-                        if country and partner and dir_type:
-                            ti = TradeInfo.info.add_trade_info(resource, country_obj, partner_obj, dir_type_obj,
-                                                               int(temp[0]['year']),
-                                                               float(re.sub(r"[,]", "", temp[-1]['value']))*1000, 1)
-
-                        # asvesdo.append(temp)
         return asvesdo
+
+
+
