@@ -1,0 +1,205 @@
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 73, in add_resource
+    return json.JSONEncoder(True)
+TypeError: __init__() takes 1 positional argument but 2 were given
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 73, in add_resource
+    return json.dump(True)
+TypeError: dump() missing 1 required positional argument: 'fp'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\utils\deprecation.py", line 142, in __call__
+    response = self.process_response(request, response)
+  File "C:\Python3.6.1\lib\site-packages\django\middleware\clickjacking.py", line 32, in process_response
+    if response.get('X-Frame-Options') is not None:
+AttributeError: 'str' object has no attribute 'get'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\utils\deprecation.py", line 142, in __call__
+    response = self.process_response(request, response)
+  File "C:\Python3.6.1\lib\site-packages\django\middleware\clickjacking.py", line 32, in process_response
+    if response.get('X-Frame-Options') is not None:
+AttributeError: 'bool' object has no attribute 'get'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 73, in add_resource
+    return JsonResponse(True)
+  File "C:\Python3.6.1\lib\site-packages\django\http\response.py", line 524, in __init__
+    'In order to allow non-dict objects to be serialized set the '
+TypeError: In order to allow non-dict objects to be serialized set the safe parameter to False.
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 73, in add_resource
+    print(request.REQUEST)
+AttributeError: 'WSGIRequest' object has no attribute 'REQUEST'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 74, in add_resource
+    print(q.pop())
+AttributeError: 'generator' object has no attribute 'pop'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 74, in add_resource
+    print(q.intervalues())
+AttributeError: 'QueryDict' object has no attribute 'intervalues'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 74, in add_resource
+    print(q.itervalues())
+AttributeError: 'QueryDict' object has no attribute 'itervalues'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 74, in add_resource
+    print(q.iteritems())
+AttributeError: 'QueryDict' object has no attribute 'iteritems'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 74, in add_resource
+    print(q.itervalues())
+AttributeError: 'QueryDict' object has no attribute 'itervalues'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 75, in add_resource
+    a = json.loads("" + dict(request.POST))
+TypeError: must be str, not dict
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 83, in add_resource
+    return JsonResponse(resource)
+  File "C:\Python3.6.1\lib\site-packages\django\http\response.py", line 524, in __init__
+    'In order to allow non-dict objects to be serialized set the '
+TypeError: In order to allow non-dict objects to be serialized set the safe parameter to False.
+Not Found: /favicon.ico
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 77, in add_resource
+    template_data = [post_data['parameters'], post_data['country_css'],
+KeyError: 'parameters'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 77, in add_resource
+    template_data = ['' if post_data['parameters'] else post_data['parameters'], post_data['country_css'],
+KeyError: 'parameters'
+Internal Server Error: /admin/resources/add_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 77, in add_resource
+    template_data = [post_data['parameters'] if post_data['parameters'] else '', post_data['country_css'],
+KeyError: 'parameters'
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
