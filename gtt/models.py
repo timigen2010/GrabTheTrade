@@ -9,6 +9,8 @@ from random import choice
 import re
 from multiprocessing import Pool
 from itertools import repeat
+import json
+from itertools import product
 
 
 
@@ -113,96 +115,34 @@ class Article(models.Model):
 class Data(models.Model):
     text = models.TextField()
 
-    # @staticmethod
-    # def multi_grab_partner(self, partner, dir_types, language, user_agents, proxies, resource):
-
-
-    @staticmethod
-    def multi_grab_country(x):
-
-        print(x)
-        return x*2
-        # for partner in countries_code:
-        #     for dir_type in dir_types:
-        #         url = "http://www.trademap.org/tradestat/Bilateral_TS.aspx?nvpm=" + str(language) \
-        #               + "|" + str(country).rjust(3, '0') + "||" \
-        #               + str(partner).rjust(3, '0') + "||TOTAL|||2|1|1|" \
-        #               + str(dir_type) + "|2|1|1|1|1"
-        #
-        #         try:
-        #             req = request.Request(url)
-        #             req.add_header('User-Agent', choice(user_agents))
-        #
-        #             page = request.urlopen(req)
-        #
-        #             doc = html.document_fromstring(page.read())
-        #             allok = 1
-        #             print('duple success')
-        #         except:
-        #             allok = 0
-        #             print('site cut')
-        #
-        #         while not allok:
-        #             try:
-        #                 proxy = {'http': 'http://' + choice(proxies)}
-        #
-        #                 req = request.Request(url)
-        #                 req.add_header('User-Agent', choice(user_agents))
-        #
-        #                 opener = request.build_opener(request.ProxyHandler(proxy))
-        #                 request.install_opener(opener)
-        #
-        #                 page = request.urlopen(req)
-        #
-        #                 doc = html.document_fromstring(page.read())
-        #                 allok = 1
-        #                 print('new success')
-        #             except:
-        #                 allok = 0
-        #                 print('bad server error')
-        #
-        #         elements = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(4) td[title="Direct Data"]')
-        #         years = doc.cssselect('#ctl00_PageContent_MyGridView1 tr:nth-child(3) th a')
-        #         temp = []
-        #         for i in range(len(elements)):
-        #             temp.append({
-        #                 'country': doc.cssselect('#ctl00_NavigationControl_DropDownList_Country >'
-        #                                          + ' option:checked')[0].text_content(),
-        #                 'partner': doc.cssselect('#ctl00_NavigationControl_DropDownList_Partner >'
-        #                                          + ' option:checked')[0].text_content(),
-        #                 'dir_type': dir_type,
-        #
-        #                 'year': years[i].text_content()[-4:],
-        #
-        #                 'value': elements[i].text_content()
-        #             })
-        #         pprint(temp)
-        #
-        #         if temp:
-        #             country_obj, created = Country.country.get_or_create(code=temp[0]['country'])
-        #             partner_obj, created = Country.country.get_or_create(code=temp[0]['partner'])
-        #             dir_type_obj = DirectionType.objects.get(id=temp[0]['dir_type'])
-        #
-        #             if country and partner and dir_type:
-        #                 ti = TradeInfo.info.add_trade_info(resource, country_obj, partner_obj, dir_type_obj,
-        #                                                    int(temp[0]['year']),
-        #                                                    float(re.sub(r"[,]", "", temp[-1]['value']))*1000, 1)
-
-                    # asvesdo.append(temp)
 
     def grab_the_site(self):
-        from .tasks import countries_counting
-        template = Template.template.add_template('mmm')
-        template.save()
-        resource = Resource.resource.add_resource('mmm', 'http://www.trademap.org/', template)
-        resource.save()
-        countries_code = [x for x in range(1000)]
-        language = 1
-        dir_types = [1, 2, 4]
-        asvesdo = []
+        from .tasks import parse
 
+        # Получение ресурса и шаблона из базы
+        resource = Resource.resource.get(id=132)
+        template = resource.template
+
+        # Обработка тела шаблона, формаирование параметров
+        body = json.loads(template.body)
+        params = []
+        if isinstance(body[0], dict):
+            for param in body[0]:
+                if isinstance(body[0][param], list):
+                    params.append([x for x in range(int(param[0]), int(param[1]), int(param[2]))])
+                else:
+                    params.append(body[0][param].strip().replace(' ', '').split(","))
+        csss = {
+            'country': body[1],
+            'partner': body[2],
+            'year': body[3],
+            'direction_type': body[4],
+            'value': body[5],
+            'factor': body[6]
+        }
+
+        # Получение списка User-Agents и Proxy
         user_agents = open("gtt/static/gtt/hideme/useragents.txt").read().split('\n')
-        # proxies = open("gtt/static/gtt/hideme/proxies.txt").read().split('\n')
         url = "http://www.httptunnel.ge/ProxyListForFree.aspx"
         p_req = request.Request(url)
         p_page = request.urlopen(p_req)
@@ -213,22 +153,31 @@ class Data(models.Model):
         for ip in ips:
             proxies.append(ip.text_content())
 
-        # for result in countries_code:
-        #     print(result)
-        # results = []
-        #
-        # p = Pool()
-        # result = p.starmap_async(Data.multi_grab_country, countries_code)
+        # Выполнение парсинга
+        products = list(product(*params))
+        maxlen = len(products)
 
-        # print(result.get(5))
-        # p.close()
-        # p.join()
+        if maxlen > 3500000:
+            return 1
+        steps = []
+        if maxlen <= 1000:
+            for p in products:
+                steps.append(parse.delay(resource, user_agents, proxies, p, csss))
 
-        for country in countries_code:
-            countries_counting.delay(country, countries_code, resource, language, dir_types, user_agents, proxies)
+        else:
+            step = maxlen / 30000
+            for x in range(30000):
+                print(x)
+                steps.append(parse.delay(resource, user_agents, proxies, products[int(x*step):int((x+1)*step+1)], csss))
+
+        while steps:
+            step = steps.pop(0)
+            if step.status != 'SUCCESS':
+                steps.append(step)
+
+        return 0
 
 
-        return asvesdo
 
 
 

@@ -30,6 +30,7 @@
 {#                            pth.animate({fill: '#00'+(Math.floor(Math.random() * (255 - 128 + 1)) + 128)+'00'}, 200);#}
 {#                        }#}
 
+                        console.log(path.node.id);
                         pth = path;
                         while(pth.next){
                             pth.next.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);

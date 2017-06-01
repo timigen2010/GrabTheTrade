@@ -203,3 +203,399 @@ Not Found: /favicon.ico
 Not Found: /favicon.ico
 Not Found: /favicon.ico
 Not Found: /favicon.ico
+Internal Server Error: /admin/resources/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 69, in resources
+    'resources': res})
+  File "C:\Python3.6.1\lib\site-packages\django\shortcuts.py", line 30, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Python3.6.1\lib\site-packages\django\template\loader.py", line 68, in render_to_string
+    return template.render(context, request)
+  File "C:\Python3.6.1\lib\site-packages\django\template\backends\django.py", line 66, in render
+    return self.template.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 207, in render
+    return self._render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 957, in render_annotated
+    return self.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 957, in render_annotated
+    return self.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\loader_tags.py", line 177, in render
+    return compiled_parent._render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 199, in _render
+    return self.nodelist.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 957, in render_annotated
+    return self.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\loader_tags.py", line 72, in render
+    result = block.nodelist.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 990, in render
+    bit = node.render_annotated(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\base.py", line 957, in render_annotated
+    return self.render(context)
+  File "C:\Python3.6.1\lib\site-packages\django\template\defaulttags.py", line 458, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+  File "C:\Python3.6.1\lib\site-packages\django\urls\base.py", line 91, in reverse
+    return force_text(iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs)))
+  File "C:\Python3.6.1\lib\site-packages\django\urls\resolvers.py", line 497, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'edit_resource' not found. 'edit_resource' is not a valid view function or pattern name.
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Internal Server Error: /admin/resources/get_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 90, in get_resource
+    res = Resource.resource.get(id=0)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 380, in get
+    self.model._meta.object_name
+gtt.models.DoesNotExist: Resource matching query does not exist.
+Internal Server Error: /admin/resources/get_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 98, in get_resource
+    "data": json.loads(res.template.data)}
+AttributeError: 'Template' object has no attribute 'data'
+Not Found: /favicon.ico
+Internal Server Error: /admin/resources/edit_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 108, in edit_resource
+    res = Resource.resource.get(id=post_data['id'])
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 371, in get
+    clone = self.filter(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 782, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 800, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1261, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1287, in _add_q
+    allow_joins=allow_joins, split_subq=split_subq,
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1221, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1115, in build_lookup
+    return final_lookup(lhs, rhs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\lookups.py", line 24, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\lookups.py", line 74, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\fields\__init__.py", line 962, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+Internal Server Error: /admin/resources/edit_resource/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 108, in edit_resource
+    res = Resource.resource.get(id=post_data['id'])
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 371, in get
+    clone = self.filter(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 782, in filter
+    return self._filter_or_exclude(False, *args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\query.py", line 800, in _filter_or_exclude
+    clone.query.add_q(Q(*args, **kwargs))
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1261, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1287, in _add_q
+    allow_joins=allow_joins, split_subq=split_subq,
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1221, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\sql\query.py", line 1115, in build_lookup
+    return final_lookup(lhs, rhs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\lookups.py", line 24, in __init__
+    self.rhs = self.get_prep_lookup()
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\lookups.py", line 74, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+  File "C:\Python3.6.1\lib\site-packages\django\db\models\fields\__init__.py", line 962, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /demo
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 157, in grab_the_site
+    print(type(list(product(*params)[0])))
+TypeError: 'itertools.product' object is not subscriptable
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 120, in grab_the_site
+    from .tasks import countries_counting
+ImportError: cannot import name 'countries_counting'
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 166, in grab_the_site
+    parse.delay("", "", "", products[x*step:(x+1)*step])
+TypeError: slice indices must be integers or None or have an __index__ method
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 167, in grab_the_site
+    parse.delay("", "", "", products[int(x*step):int((x+1)*step)])
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 461, in delay
+    return self.apply_async(args, kwargs)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 573, in apply_async
+    **dict(self._get_exec_options(), **options)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\base.py", line 354, in send_task
+    reply_to=reply_to or self.oid, **options
+  File "C:\Python3.6.1\lib\site-packages\celery\app\amqp.py", line 310, in publish_task
+    **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 172, in publish
+    routing_key, mandatory, immediate, exchange, declare)
+  File "C:\Python3.6.1\lib\site-packages\kombu\connection.py", line 449, in _ensured
+    return fun(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 188, in _publish
+    mandatory=mandatory, immediate=immediate,
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\__init__.py", line 521, in basic_publish
+    message, exchange, routing_key, **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\exchange.py", line 61, in deliver
+    _put(queue, message, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\redis.py", line 710, in _put
+    client.lpush(self._q_for_pri(queue, pri), dumps(message))
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 1227, in lpush
+    return self.execute_command('LPUSH', name, *values)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 573, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 585, in parse_response
+    response = connection.read_response()
+  File "C:\Python3.6.1\lib\site-packages\redis\connection.py", line 582, in read_response
+    raise response
+redis.exceptions.ResponseError: OOM command not allowed when used memory > 'maxmemory'.
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 167, in grab_the_site
+    parse.delay("", "", "", products[int(x*step):int((x+1)*step)])
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 461, in delay
+    return self.apply_async(args, kwargs)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 573, in apply_async
+    **dict(self._get_exec_options(), **options)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\base.py", line 354, in send_task
+    reply_to=reply_to or self.oid, **options
+  File "C:\Python3.6.1\lib\site-packages\celery\app\amqp.py", line 310, in publish_task
+    **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 172, in publish
+    routing_key, mandatory, immediate, exchange, declare)
+  File "C:\Python3.6.1\lib\site-packages\kombu\connection.py", line 449, in _ensured
+    return fun(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 188, in _publish
+    mandatory=mandatory, immediate=immediate,
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\__init__.py", line 521, in basic_publish
+    message, exchange, routing_key, **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\exchange.py", line 61, in deliver
+    _put(queue, message, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\redis.py", line 710, in _put
+    client.lpush(self._q_for_pri(queue, pri), dumps(message))
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 1227, in lpush
+    return self.execute_command('LPUSH', name, *values)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 573, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 585, in parse_response
+    response = connection.read_response()
+  File "C:\Python3.6.1\lib\site-packages\redis\connection.py", line 582, in read_response
+    raise response
+redis.exceptions.ResponseError: OOM command not allowed when used memory > 'maxmemory'.
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 167, in grab_the_site
+    parse.delay("", "", "", products[int(x*step):int((x+1)*step)])
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 461, in delay
+    return self.apply_async(args, kwargs)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 573, in apply_async
+    **dict(self._get_exec_options(), **options)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\base.py", line 354, in send_task
+    reply_to=reply_to or self.oid, **options
+  File "C:\Python3.6.1\lib\site-packages\celery\app\amqp.py", line 310, in publish_task
+    **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 172, in publish
+    routing_key, mandatory, immediate, exchange, declare)
+  File "C:\Python3.6.1\lib\site-packages\kombu\connection.py", line 449, in _ensured
+    return fun(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 188, in _publish
+    mandatory=mandatory, immediate=immediate,
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\__init__.py", line 521, in basic_publish
+    message, exchange, routing_key, **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\exchange.py", line 61, in deliver
+    _put(queue, message, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\redis.py", line 710, in _put
+    client.lpush(self._q_for_pri(queue, pri), dumps(message))
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 1227, in lpush
+    return self.execute_command('LPUSH', name, *values)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 573, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 585, in parse_response
+    response = connection.read_response()
+  File "C:\Python3.6.1\lib\site-packages\redis\connection.py", line 582, in read_response
+    raise response
+redis.exceptions.ResponseError: OOM command not allowed when used memory > 'maxmemory'.
+Not Found: /favicon.ico
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 156, in grab_the_site
+    print(resource.url.split(["%s", "%S", "%p", "%P"]))
+TypeError: must be str or None, not list
+Internal Server Error: /data/
+Traceback (most recent call last):
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "C:\Python3.6.1\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\views.py", line 29, in data
+    result = data.grab_the_site()
+  File "C:\Users\timig\PycharmProjects\GrabTheTrade\gtt\models.py", line 171, in grab_the_site
+    parse.delay(resource, user_agents, proxies, products[int(x*step):int((x+1)*step+1)], csss)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 461, in delay
+    return self.apply_async(args, kwargs)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\task.py", line 573, in apply_async
+    **dict(self._get_exec_options(), **options)
+  File "C:\Python3.6.1\lib\site-packages\celery\app\base.py", line 354, in send_task
+    reply_to=reply_to or self.oid, **options
+  File "C:\Python3.6.1\lib\site-packages\celery\app\amqp.py", line 310, in publish_task
+    **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 172, in publish
+    routing_key, mandatory, immediate, exchange, declare)
+  File "C:\Python3.6.1\lib\site-packages\kombu\connection.py", line 449, in _ensured
+    return fun(*args, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\messaging.py", line 188, in _publish
+    mandatory=mandatory, immediate=immediate,
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\__init__.py", line 521, in basic_publish
+    message, exchange, routing_key, **kwargs
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\virtual\exchange.py", line 61, in deliver
+    _put(queue, message, **kwargs)
+  File "C:\Python3.6.1\lib\site-packages\kombu\transport\redis.py", line 710, in _put
+    client.lpush(self._q_for_pri(queue, pri), dumps(message))
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 1227, in lpush
+    return self.execute_command('LPUSH', name, *values)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 573, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "C:\Python3.6.1\lib\site-packages\redis\client.py", line 585, in parse_response
+    response = connection.read_response()
+  File "C:\Python3.6.1\lib\site-packages\redis\connection.py", line 582, in read_response
+    raise response
+redis.exceptions.ResponseError: MISCONF Redis is configured to save RDB snapshots, but is currently not able to persist on disk. Commands that may modify the data set are disabled. Please check Redis logs for details about the error.
+Not Found: /favicon.ico
+Not Found: /admin/resources/pages/mailbox/mailbox.html
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /favicon.ico
+Not Found: /admin/resources/pages/mailbox/mailbox.html

@@ -75,11 +75,64 @@ def add_resource(request):
     if request.user.is_authenticated():
         post_data = parser.parse(request.POST.urlencode())
         template_data = [post_data['parameters'] if 'parameters' in post_data.keys() else '', post_data['country_css'],
-                         post_data['partner_css'], post_data['year_css'], post_data['direction_css']]
+                         post_data['partner_css'], post_data['year_css'], post_data['direction_css'],
+                         post_data['values_css'], post_data['factor']]
         template = Template.template.add_template(json.dumps(template_data))
         template.save()
         resource = Resource.resource.add_resource(post_data['resource_name'], post_data['url'], template)
         resource.save()
         return JsonResponse({'id': resource.id, 'name': resource.name}, safe=False)
+    else:
+        return HttpResponse(status=404)
+
+
+def get_resource(request):
+    if request.user.is_authenticated():
+        post_data = parser.parse(request.POST.urlencode())
+        try:
+            res = Resource.resource.get(id=post_data['id'])
+        except Resource.DoesNotExist:
+            return JsonResponse(False, safe=False)
+        else:
+            result = {"name": res.name,
+                      "url": res.url,
+                      "data": json.loads(res.template.body)}
+            return JsonResponse(result, safe=False)
+    else:
+        return HttpResponse(status=404)
+
+
+def edit_resource(request):
+    if request.user.is_authenticated():
+        post_data = parser.parse(request.POST.urlencode())
+        try:
+            res = Resource.resource.get(id=post_data['id'])
+            template_data = [post_data['parameters'] if 'parameters' in post_data.keys() else '',
+                             post_data['country_css'],
+                             post_data['partner_css'], post_data['year_css'], post_data['direction_css'],
+                             post_data['value_css'], post_data['factor']]
+            res.template.body = json.dumps(template_data)
+            res.template.save()
+            res.name = post_data['resource_name']
+            res.url = post_data['url']
+            res.save()
+        except Resource.DoesNotExist:
+            return JsonResponse(False, safe=False)
+        else:
+            return JsonResponse(res.name, safe=False)
+    else:
+        return HttpResponse(status=404)
+
+
+def delete_resource(request):
+    if request.user.is_authenticated():
+        post_data = parser.parse(request.POST.urlencode())
+        try:
+            res = Resource.resource.get(id=post_data['id'])
+            res.template.delete()
+        except Resource.DoesNotExist:
+            return JsonResponse(False, safe=False)
+        else:
+            return JsonResponse(True, safe=False)
     else:
         return HttpResponse(status=404)

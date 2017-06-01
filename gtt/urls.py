@@ -10,4 +10,7 @@ urlpatterns = [
     url(r'^logout[/]$', views.logout, name='logout'),
     url(r'^admin/resources[/]$', views.resources, name='resources'),
     url(r'^admin/resources/add_resource[/]$', views.add_resource, name='add_resource'),
+    url(r'^admin/resources/get_resource[/]$', views.get_resource, name='get_resource'),
+    url(r'^admin/resources/edit_resource[/]$', views.edit_resource, name='edit_resource'),
+    url(r'^admin/resources/delete_resource[/]$', views.delete_resource, name='delete_resource'),
 ]
