@@ -11,6 +11,8 @@ from multiprocessing import Pool
 from itertools import repeat
 import json
 from itertools import product
+from datetime import datetime
+import time
 
 
 
@@ -22,13 +24,14 @@ MAX_SHORT_TEXT_LENGTH = 255
 
 
 class CountryManager(models.Manager):
-    def add_country(self, code):
-        country = self.create(code=code)
+    def add_country(self, code, rus=None):
+        country = self.create(code=code, rus=rus)
         return country
 
 
 class Country(models.Model):
     code = models.CharField(max_length=255)
+    rus = models.CharField(max_length=255, null=True)
     country = CountryManager()
 
 
@@ -74,8 +77,23 @@ class TradeInfo(models.Model):
     direction_type = models.ForeignKey(DirectionType)
     year = models.IntegerField()
     value = models.FloatField()
-    used = models.BooleanField(default=1)
+    used = models.BooleanField(default=0)
     info = TradeInfoManager()
+
+
+class TaskManager(models.Manager):
+    def add_task(self, name, resource, body, date_start, date_end=None):
+        task = self.create(name=name, resource=resource, body=body, date_start=date_start, date_end=date_end)
+        return task
+
+
+class Task(models.Model):
+    name = models.CharField(max_length=255)
+    resource = models.ForeignKey(Resource)
+    body = models.TextField()
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField(null=True)
+    task = TaskManager()
 
 
 class Statistic(models.Model):
@@ -84,12 +102,23 @@ class Statistic(models.Model):
     index = models.FloatField()
 
 
+class AnalyzedTradeInfoManager(models.Manager):
+    def add_analyzed_trade_info(self,  country, partner, direction_type, year, value):
+        analyzed_trade_info = self.create(country=country, partner=partner,
+                                          direction_type=direction_type, year=year, value=value)
+        return analyzed_trade_info
+
+
 class AnalyzedTradeInfo(models.Model):
     country = models.ForeignKey(Country, related_name="analyzed_trade_country")
     partner = models.ForeignKey(Country, related_name="analyzed_trade_partner")
     direction_type = models.ForeignKey(DirectionType)
     year = models.IntegerField()
     value = models.FloatField()
+    info = AnalyzedTradeInfoManager()
+
+    class Meta:
+        unique_together = (('country', 'partner', 'direction_type', 'year'),)
 
 
 class Prediction(models.Model):
@@ -116,20 +145,35 @@ class Data(models.Model):
     text = models.TextField()
 
 
-    def grab_the_site(self):
-        from .tasks import parse
+    def grab_the_site(self, resource):
+        from .tasks import parse, analyze, unite
 
         # Получение ресурса и шаблона из базы
-        resource = Resource.resource.get(id=132)
+        # resource = Resource.resource.get(id=132)
         template = resource.template
 
         # Обработка тела шаблона, формаирование параметров
         body = json.loads(template.body)
+
         params = []
         if isinstance(body[0], dict):
             for param in body[0]:
                 if isinstance(body[0][param], list):
-                    params.append([x for x in range(int(param[0]), int(param[1]), int(param[2]))])
+                    par = [int(x) for x in body[0][param]]
+
+                    x1, x2, x3 = par[0], par[1], par[2]
+                    if [x for x in range(x1, x2, x3)]:
+                        params.append([x for x in range(x1, x2, x3)])
+                    else:
+                        if x1 > x2:
+                            params.append([x for x in range(x1, x2, -1)])
+
+                        elif x1 < x2:
+                            params.append([x for x in range(x1, x2, 1)])
+
+                        else:
+                            params.append([x1])
+
                 else:
                     params.append(body[0][param].strip().replace(' ', '').split(","))
         csss = {
@@ -155,25 +199,63 @@ class Data(models.Model):
 
         # Выполнение парсинга
         products = list(product(*params))
+        # print(params)
         maxlen = len(products)
 
         if maxlen > 3500000:
             return 1
         steps = []
+        regulators = []
         if maxlen <= 1000:
             for p in products:
-                steps.append(parse.delay(resource, user_agents, proxies, p, csss))
+                step_el = parse.delay(resource, user_agents, proxies, p, csss)
+                steps.append(step_el.id)
+                regulators.append(step_el)
+            task = Task.task.add_task("Парсинг", resource, json.dumps(steps), datetime.now())
+            task.save()
 
         else:
-            step = maxlen / 30000
-            for x in range(30000):
+            step = maxlen / 20000
+            for x in range(2):
                 print(x)
-                steps.append(parse.delay(resource, user_agents, proxies, products[int(x*step):int((x+1)*step+1)], csss))
+                step_el = parse.delay(resource, user_agents, proxies, products[int(x*step):int((x+1)*step+1)], csss)
+                steps.append(step_el.id)
+                regulators.append(step_el)
+            task = Task.task.add_task("Парсинг", resource, json.dumps(steps), datetime.now(), None)
+            task.save()
 
-        while steps:
-            step = steps.pop(0)
-            if step.status != 'SUCCESS':
-                steps.append(step)
+
+        while regulators:
+            regulator = regulators.pop(0)
+            if regulator.status != 'SUCCESS':
+                regulators.append(regulator)
+
+        task.date_end = datetime.now()
+        task.save()
+
+        # Анализ достоверности
+        analyzer = analyze.delay(resource)
+
+        task = Task.task.add_task("Анализ достоверности", resource, json.dumps([analyzer.id]), datetime.now(), None)
+        task.save()
+
+        while analyzer.status != 'SUCCESS':
+            time.sleep(1)
+
+        task.date_end = datetime.now()
+        task.save()
+
+        # Объединение данных
+        unite = unite.delay(resource)
+
+        task = Task.task.add_task("Объединение данных", resource, json.dumps([unite.id]), datetime.now(), None)
+        task.save()
+
+        while unite.status != 'SUCCESS':
+            time.sleep(1)
+
+        task.date_end = datetime.now()
+        task.save()
 
         return 0
 
