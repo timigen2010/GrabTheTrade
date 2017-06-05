@@ -1,0 +1,344 @@
+{% extends 'gtt/admin/index.html' %}
+{% block page_header %}
+    Администраторы
+{% endblock %}
+{% block breadcrumbs %}
+    <li><a href="{% url 'admin' %}"><i class="fa fa-dashboard"></i> Админпанель</a></li>
+    <li class="active">Администраторы</li>
+{% endblock %}
+
+{% block content %}
+    <section class="col-lg-7 connectedSortable">
+        <div class="box box-primary">
+            <div class="box-header">
+              <i class="fa fa-user-plus"></i>
+
+              <h3 id="editBox" data-type="add" class="box-title">Добавление администратора</h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+                <button type="button" class="new_resource btn btn-primary btn-sm btn-flat" data-toggle="tooltip" title="Новый администратор">
+                  <i class="fa fa-plus"></i></button>
+              </div>
+              <!-- /. tools -->
+            </div>
+            <div class="box-body">
+              <form id="resource_form" action="#" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                  <input type="text" maxlength="255" class="form-control" name="first_name" placeholder="Имя">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input type="text" maxlength="255" class="form-control" name="last_name" placeholder="Фамилия">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input type="email" maxlength="255" class="form-control" name="email" placeholder="E-mail">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input type="text" maxlength="255" class="form-control" name="username" placeholder="Логин">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input type="password" maxlength="255" class="form-control" name="password" placeholder="Пароль">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input type="password" maxlength="255" class="form-control" name="password_approve" placeholder="Подтверждение пароля">
+                  <span hidden="hidden">Не может быть пустым!</span>
+                </div>
+                <div class="form-group">
+                  <input id="iCheckBtn" type="checkbox" name="is_superuser" value="1" >&nbsp;&nbsp;Суперпользователь
+{#                    <label for="iCheckBtn"> Суперюзер</label>#}
+                </div>
+
+
+
+
+
+{#                <div class="form-group">#}
+{#                  <input type="number" class="form-control" name="emailto" placeholder="Email to:">#}
+{#                </div>#}
+{#                <div class="form-group">#}
+{#                  <input type="text" class="form-control" name="subject" placeholder="Subject">#}
+{#                </div>#}
+{#                <div>#}
+{#                  <textarea class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>#}
+{#                </div>#}
+              </form>
+            </div>
+            <div class="box-footer clearfix">
+              <button type="button" class="pull-right btn btn-primary btn-flat" id="saveResource">Сохранить</button>
+            </div>
+        </div>
+    </section>
+    <section class="col-lg-5 connectedSortable">
+        <div class="box box-primary">
+            <div class="box-header">
+              <i class="fa fa-users"></i>
+
+              <h3 class="box-title">Список администраторов</h3>
+              <!-- tools box -->
+    {#          <div class="pull-right box-tools">#}
+    {#            <button type="button" class="btn btn-primary btn-sm btn-flat" data-widget="remove" data-toggle="tooltip" title="Remove">#}
+    {#              <i class="fa fa-times"></i></button>#}
+    {#          </div>#}
+              <!-- /. tools -->
+            </div>
+            <div class="box-body no-padding">
+              <ul id="resources_list" class="nav nav-pills nav-stacked">
+                  {% for user in users %}
+                      <li>
+                        <a style="cursor: pointer;" class="resource_link" data-id="{{ user.id }}">{{ user.get_full_name }}
+                            <span class="glyphicon glyphicon-remove pull-right" onclick="$(this).parent().data('dont', true);"></span>
+                        </a>
+                      </li>
+{#                      <div style="width: 100%; padding: 10px;">#}
+{#                        <label>Подтвердите удаление</label>#}
+{#                        <div class="form-group">#}
+{#                            <div class="row">#}
+{#                                <div class="col-md-6">#}
+{#                                    <button class="btn btn-danger btn-block btn-flat">Удалить</button>#}
+{#                                </div>#}
+{#                                <div class="col-md-6">#}
+{#                                    <button class="btn btn-default btn-block btn-flat">Отменить</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                      </div>#}
+                  {% endfor %}
+              </ul>
+            </div>
+            <div class="box-footer clearfix">
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript"><!--
+        $(document).ready(function () {
+
+            $("#iCheckBtn").iCheck({
+              checkboxClass: 'icheckbox_minimal-blue',
+              radioClass: 'iradio_minimal-blue'
+            });
+
+
+
+            $("#saveResource").on("click", function () {
+                var validated = true;
+                if($("#editBox").data('type')=="add"){
+                    $(".form-group input").each(function (index, value) {
+                        if($(this).val()==""){
+                            $(this).parents(".form-group").addClass('has-error');
+                            $(this).next().addClass('help-block');
+                            validated = false;
+                        }
+                        else{
+                            $(this).parents(".form-group").removeClass('has-error');
+                            $(this).next().removeClass('help-block');
+                        }
+                    });
+                }
+                else{
+                     $(".form-group input:not(input[name='password']):not(input[name='password_approve'])").each(function (index, value) {
+                        if($(this).val()==""){
+                            $(this).parents(".form-group").addClass('has-error');
+                            $(this).next().addClass('help-block');
+                            validated = false;
+                        }
+                        else{
+                            $(this).parents(".form-group").removeClass('has-error');
+                            $(this).next().removeClass('help-block');
+                        }
+                    });
+                }
+
+                if($("input[name='password']").val() != $("input[name='password_approve']").val()){
+                    validated=false;
+                    notification("Пароли не совпадают!", 'danger', 3000);
+                }
+                if(validated){
+                    if($("#editBox").data('type')=="add"){
+                        var fd = new FormData($("#resource_form")[0]);
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'add_user' %}",
+                            data: fd,
+                            dataType: 'json',
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success: function(data){
+                                if(!data){
+                                    notification("Запись с таким логином уже существует!", 'danger', 3000);
+                                }
+                                else{
+                                    var box = "<li style='display: none;' class='active'><a style='cursor: pointer;' data-id='" + data['id'] + "'>" + data['name'] + "<span class=\"glyphicon glyphicon-remove pull-right\" " +
+                                    "onclick=\"$(this).parent().data('dont', true);\"></span></a></li>";
+                                    $("#resources_list>li").removeClass('active');
+                                    $("#resources_list").prepend(box);
+                                    $("#editBox").data('type', 'edit');
+                                    $("#editBox").data('id', $("#resources_list>li.active>a").data('id'));
+                                    $("#editBox").html("Редактирование администратора");
+                                    $("#resources_list>li:first-child").slideDown();
+                                    notification("Администратор успешно добавлен!", 'success', 3000);
+                                }
+                            }
+                        });
+                    }
+                    else{
+                        var fd = new FormData($("#resource_form")[0]);
+                        fd.append('id', $("#editBox").data('id'));
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'edit_user' %}",
+                            data: fd,
+                            dataType: 'json',
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            success: function(data){
+                                if(data){
+                                    if(data==2){
+                                        notification("Запись с таким логином уже существует!", 'danger', 3000);
+                                    }
+                                    else{
+                                        $("#resources_list > li.active > a").html(data + $('<div>').append($("#resources_list > li.active > a > span").clone()).html());
+                                        notification("Администратор успешно изменен!", 'success', 3000);
+                                    }
+                                }
+                                else{
+                                    notification("Такого администратора уже не существует!\nОбновите, пожалуйста, страницу!", 'danger', 3000);
+                                }
+                            }
+                        });
+                    }
+
+                }
+            });
+            $(".new_resource").on("click", function () {
+                $(".help-block").removeClass('help-block');
+                $(".form-group.has-error").removeClass('has-error');
+                $("input[name='last_name']").val("");
+                $("input[name='first_name']").val("");
+                $("input[name='email']").val("");
+                $("input[name='password']").val("");
+                $("input[name='password_approve']").val("");
+                $("input[name='username']").val("");
+                $("#iCheckBtn").iCheck('uncheck');
+                $("#editBox").data('type', 'add');
+                $("#editBox").html("Добавление администратора");
+                $("#resources_list>li.active").removeClass('active');
+            });
+            $("#resources_list").on("click", "li>a", function () {
+                if($(this).data('dont')){
+                    $(this).data('dont', false);
+                    if($(this).parent().hasClass('bg-danger')){
+                        return;
+                    }
+                    $("#resources_list li.bg-danger").removeClass('bg-danger');
+                    $(".confirm-delete").slideUp(function () {
+                        $(this).remove();
+                    });
+                    var box = '<div class="confirm-delete" hidden="hidden" style="width: 100%; padding: 10px;">' +
+                        '                        <label>Подтвердите удаление</label>' +
+                        '                        <div class="form-group">' +
+                        '                            <div class="row">' +
+                        '                                <div class="col-md-6">' +
+                        '                                    <button class="delete_resource btn btn-danger btn-block btn-flat" value="'+ $(this).data('id') +'">Удалить</button>' +
+                        '                                </div>' +
+                        '                                <div class="col-md-6">' +
+                        '                                    <button class="dont_delete btn btn-default btn-block btn-flat">Отменить</button>' +
+                        '                                </div>' +
+                        '                            </div>' +
+                        '                        </div>' +
+                        '                      </div>';
+                    $(this).parent().after(box);
+                    $(this).parent().addClass('bg-danger');
+                    $(".confirm-delete").slideDown();
+                    return;
+                }
+                $(".help-block").removeClass('help-block');
+                $(".form-group.has-error").removeClass('has-error');
+                $("#resources_list>li.active").removeClass('active');
+                $(this).parent().addClass('active');
+                var fd = new FormData();
+                fd.append('id', $(this).data('id'));
+                fd.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'get_user' %}",
+                    data: fd,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        if(data==false){
+                            notification("Такого администратора уже не существует!\nОбновите, пожалуйста, страницу!", 'danger', 3000);
+                        }
+                        else{
+                            $("#editBox").data('type', 'edit');
+                            $("#editBox").data('id', $("#resources_list>li.active>a").data('id'));
+                            $("#editBox").html("Редактирование администратора");
+
+                            $("input[name='first_name']").val(data['first_name']);
+                            $("input[name='last_name']").val(data['last_name']);
+                            $("input[name='email']").val(data['email']);
+                            $("input[name='username']").val(data['username']);
+                            $("input[name='password']").val("");
+                            $("input[name='password_approve']").val("");
+                            if(data['is_superuser']==1){
+                                $("#iCheckBtn").iCheck('check');
+                            }
+                            else{
+                                $("#iCheckBtn").iCheck('uncheck');
+                            }
+                        }
+
+                    }
+                });
+            });
+            $("#resources_list").on("click", ".dont_delete", function () {
+                $("#resources_list li.bg-danger").removeClass('bg-danger');
+                $(this).parents(".confirm-delete").slideUp(function () {
+                    $(this).remove();
+                });
+            });
+            $("#resources_list").on("click", ".delete_resource", function () {
+                var fd = new FormData();
+                fd.append('id', $(this).val());
+                fd.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'delete_user' %}",
+                    data: fd,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        if(data){
+                            if($("#resources_list li.bg-danger").hasClass('active')){
+                                $(".new_resource").click();
+                            }
+                            $(".confirm-delete").slideUp(function () {
+                                $(this).remove();
+                            });
+                            $("#resources_list li.bg-danger").slideUp(function () {
+                                $(this).remove();
+                            });
+                            notification("Администратор успешно удален!", 'success', 3000);
+                        }
+                        else{
+                            notification("Такого администратора уже не существует!\nОбновите, пожалуйста, страницу!", 'danger', 3000);
+                        }
+                    }
+                });
+            });
+        });
+    --></script>
+{% endblock %}

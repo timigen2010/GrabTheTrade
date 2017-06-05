@@ -1,82 +1,439 @@
 {% extends 'gtt/base.html' %}
 
 {% block title %}
-    TITLE
+    GrabTheTrade
 {% endblock %}
 
 {% block content %}
     {% load staticfiles %}
-{#    {% for article in articles %}#}
-{#        <h3><a href="{% url 'article' article.id %}">{{ article.title }}</a></h3>#}
-{#        <p>{{ article.get_short_text }}</p>#}
-{#        <br />#}
-{#    {% endfor %}#}
-    <div id="map" style="height: 98%; width: 98%"></div>
-    <button id="startGrab">Grab The Trade</button>
-    <div style="z-index: 1000">
-        {{ data }}
+    {% csrf_token %}
+    <div class="container-fluid bg-5 text-center" style="padding-top: 105px;" id="mapp">
+      <h3 class="margin">Торгово-экономическая зависимость стран</h3>
+      <div class="form-group center-block bg-1" style=" width: 100%; margin-bottom: 70px; padding: 10px;">
+          <div class="row" >
+              <div class="col-md-12 form-inline">
+                  <label class="float-right">Страна&nbsp;&nbsp;</label>
+                  <select id="country_koef" class="form-control" style="margin-right: 25px;">
+                      <option value="0" selected>--- Не выбрано ---</option>
+                      {% for country in countries %}
+                          <option value="{{ country.id }}">{{ country.rus }}</option>
+                      {% endfor %}
+                  </select>
+                  <label>Год</label>&nbsp;&nbsp;
+                  <select id="year_koef" class="form-control">
+                      {% for year in years %}
+                          <option value="{{ year.year }}">{{ year.year }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </div>
+      </div>
+      <div id="map" style="width: 100%"></div>
     </div>
+
+    <!-- First Container -->
+    <div class="container-fluid bg-1 text-center">
+      <h3 class="margin" style="color: #fff">Топ 5 зависимостей страны</h3>
+      <div class="chart active" id="top5-chart" style=" height: 400px; background-color: #fff"></div>
+    </div>
+
+    <!-- Second Container -->
+    <div class="container-fluid bg-2 text-center">
+      <h3 class="margin" style="color: #fff">Данные о зависимостях страны</h3>
+      <table id="data_koef" class="table table-striped table-bordered " cellspacing="0" width="100%" style="background-color: #fff; color: black">
+          <thead>
+            <tr>
+              <th>Страна</th>
+              <th>Партнер</th>
+              <th>Доля</th>
+            </tr>
+          </thead>
+          <tbody>
+{#            <tr>#}
+{#              <td></td>#}
+{#              <td></td>#}
+{#              <td></td>#}
+{#            </tr>#}
+          </tbody>
+      </table>
+    </div>
+
+    <div class="container-fluid text-center" >
+      <h3 class="margin">Параметры фильтрации</h3>
+      <div class="form-group center-block" style="background-color: #ddd; color: black; width: 100%; margin-bottom: 70px; padding: 10px;">
+          <div class="row" >
+              <div class="col-md-6 ">
+                  <label class="float-right pull-left">Страна&nbsp;&nbsp;</label>
+                  <select id="country_val" class="form-control" style="margin-right: 25px;">
+                      <option value="0" selected>--- Не выбрано ---</option>
+                      {% for country in countries %}
+                          <option value="{{ country.id }}">{{ country.rus }}</option>
+                      {% endfor %}
+                  </select>
+
+
+                  <label class="float-right pull-left">Направление торговли&nbsp;&nbsp;</label>
+                  <select id="dir_type_val" class="form-control" disabled style="margin-right: 25px;">
+                      <option value="0" selected>--- Не выбрано ---</option>
+                      {% for dir_type in dir_types %}
+                          <option value="{{ dir_type.id }}">{{ dir_type.rus }}</option>
+                      {% endfor %}
+                  </select>
+
+              </div>
+              <div class="col-md-6 ">
+                  <label class="float-right pull-left">Партнер&nbsp;&nbsp;</label>
+                  <select id="partner_val" class="form-control pull-left" disabled style="margin-right: 25px;">
+                      <option value="0" selected>--- Не выбрано ---</option>
+                      {% for country in countries %}
+                          <option value="{{ country.id }}">{{ country.rus }}</option>
+                      {% endfor %}
+                  </select>
+                  <label class="pull-left">Год</label>&nbsp;&nbsp;
+                  <select id="year_val" class="form-control pull-left" disabled>
+                       <option value="0" selected>--- Не выбрано ---</option>
+                      {% for year in years %}
+                          <option value="{{ year.year }}">{{ year.year }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="container-fluid bg-1 text-center" id="graph">
+      <h3 class="margin" style="color: #fff">График развития отношений между странами</h3>
+      <div class="chart active" id="relations-chart" style=" height: 400px; background-color: #fff"></div>
+    </div>
+
+
+
+    <!-- Second Container -->
+    <div class="container-fluid bg-2 text-center" id="table">
+      <h3 class="margin" style="color: #fff">Данные о показателях взаимоотношений стран</h3>
+      <table id="data_val" class="table table-striped table-bordered" cellspacing="0" width="100%" style="background-color: #fff; color: black">
+          <thead>
+            <tr>
+              <th>Страна</th>
+              <th>Партнер</th>
+              <th>Направление торговли</th>
+              <th>Год</th>
+              <th>Показатель</th>
+            </tr>
+          </thead>
+          <tbody>
+{#            <tr>#}
+{#              <td></td>#}
+{#              <td></td>#}
+{#              <td></td>#}
+{#            </tr>#}
+          </tbody>
+      </table>
+    </div>
+
     <script type="text/javascript"><!--
         $(document).ready(function () {
             var map = kartograph.map('#map');
+            var temp_color = "";
             map.loadMap("{% static 'gtt/maps/wrld.svg' %}", function(){
                 map.addLayer('countries', {
                     styles: {
-                        stroke: '#aaa',
+                        stroke: '#555',
                         fill: 'grey'
                     },
+                    title: function(data) {
+                        return data.name;
+                    },
                     click: function (d, path) {
+                        $('#country_koef').val(parseInt(path[0].id.match(/\d*$/,'')[0])+1);
+                        $('#country_koef').change();
 {#                        for (var pth in this.getLayer('countries').getPaths()){#}
 {#                            pth.animate({fill: '#00'+(Math.floor(Math.random() * (255 - 128 + 1)) + 128)+'00'}, 200);#}
 {#                        }#}
 
-                        console.log(path.node.id);
-                        pth = path;
-                        while(pth.next){
-                            pth.next.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);
-                            pth = pth.next;
-                        }
-                        while(pth.prev){
-                            pth.prev.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);
-                            pth = pth.prev;
-                        }
-                        path.animate({fill: 'purple'}, 200);
+{#                        console.log(path.node.id);#}
+{#                        pth = path;#}
+{#                        while(pth.next){#}
+{#                            pth.next.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);#}
+{#                            pth = pth.next;#}
+{#                        }#}
+{#                        while(pth.prev){#}
+{#                            pth.prev.animate({fill: '#00'+(Math.floor(Math.random() * (0xFF - 0x80 + 1)) + 0x80).toString(16)+'00'}, 200);#}
+{#                            pth = pth.prev;#}
+{#                        }#}
+{#                        path.animate({fill: 'purple'}, 200);#}
 
                     },
                     mouseenter: function (d, path) {
-                        if(path.attr('fill')!='purple') {
-                            path.attr('fill', 'blue');
+                        if(path.attr('fill')!='#605ca8') {
+                            temp_color = path.attr('fill');
+                            path.attr('fill', '#605ca8');
                         }
                     },
                     mouseleave: function (d, path) {
-                        if(path.attr('fill')!='purple'){
-                            path.animate({fill: 'grey'}, 200);
+                        if(path.attr('fill')=='#605ca8'){
+                            path.animate({fill: temp_color}, 200);
                         }
                     }
                 });
             });
 
-            $('#startGrab').on('click', function () {
+            var line_data = [{partner: "Не выбрана страна", value: 0}];
+
+            var top5_chart = new Morris.Bar({
+              // ID of the element in which to draw the chart.
+              element: 'top5-chart',
+              // Chart data records -- each entry in this array corresponds to a point on
+              // the chart.
+              data: line_data,
+              // The name of the data record attribute that contains x-values.
+              xkey: ['partner'],
+              // A list of names of data record attributes that contain y-values.
+              ykeys: ['value'],
+              // Labels for the ykeys -- will be displayed when you hover over the
+              // chart.
+              labels: ['%'],
+{#              xLabels: "year",#}
+              fillOpacity: 0.5
+{#                eventLineColors: "#fff"#}
+            });
+
+            var dtk = $("#data_koef").DataTable({
+                searching:false,
+                lengthChange:false,
+                language:{
+                    url:"//cdn.datatables.net/plug-ins/1.10.15/i18n/Russian.json"
+                },
+            });
+
+            var dtv = $("#data_val").DataTable({
+                searching:false,
+                lengthChange:false,
+                language:{
+                    url:"//cdn.datatables.net/plug-ins/1.10.15/i18n/Russian.json"
+                },
+            });
+
+            var relations_data = [{year: "Не выбрана страна", value: 0}];
+
+            var relations_chart = new Morris.Area({
+              // ID of the element in which to draw the chart.
+              element: 'relations-chart',
+              // Chart data records -- each entry in this array corresponds to a point on
+              // the chart.
+              data: relations_data,
+              // The name of the data record attribute that contains x-values.
+              xkey: ['year'],
+              // A list of names of data record attributes that contain y-values.
+              ykeys: ['value'],
+              // Labels for the ykeys -- will be displayed when you hover over the
+              // chart.
+              labels: ['$'],
+              xLabels: "year",
+              fillOpacity: 0.5
+{#                eventLineColors: "#fff"#}
+            });
+
+
+            $("#country_koef").on('change', function () {
+                if($(this).val()==0){
+                    var line_data = [{partner: "Нет данных", value: 0}];
+                    top5_chart.setData(line_data);
+                    map.getLayer('countries').style('fill', 'grey');
+                    var paths = map.getLayer('countries').getPaths({});
+                    paths[$("#country_koef").val()-1].svgPath.animate({fill: 'purple'}, 200);
+                    dtk.clear().draw();
+                    return;
+                }
+                var fd = new FormData();
+                fd.append('country', $(this).val());
+                fd.append('year', $('#year_koef').val());
+                fd.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
                 $.ajax({
-                    url: {% url 'data' %},
-                    type: 'get', // This is the default though, you don't actually need to always mention it
-                    success: function(data) {
-                        alert(data);
-                    },
-                    failure: function(data) {
-                        alert('Got an error dude');
+                    type: "POST",
+                    url: "{% url 'get_koef' %}",
+                    data: fd,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        if(!data){
+                            var line_data = [{partner: "Нет данных", value: 0}];
+                            top5_chart.setData(line_data);
+                            map.getLayer('countries').style('fill', 'grey');
+                            var paths = map.getLayer('countries').getPaths({});
+                            paths[$("#country_koef").val()-1].svgPath.animate({fill: 'purple'}, 200);
+                            dtk.clear().draw();
+                        }
+                        else {
+                            map.getLayer('countries').style('fill', 'grey');
+                            var paths = map.getLayer('countries').getPaths({});
+                            for(var key in data){
+                                var color = "";
+{#                                if(data[key].index <= 0.1){#}
+{#                                    color = "#fff";#}
+{#                                }#}
+{#                                if(data[key].index > 0.05 && data[key].index <= 0.1){#}
+{#                                    color = "#e8f8f5";#}
+{#                                }#}
+{#                                if(data[key].index > 0.1 && data[key].index <= 0.2){#}
+{#                                    color = "#d1f1eb";#}
+{#                                }#}
+{#                                if(data[key].index > 0.15 && data[key].index <= 0.2){#}
+{#                                    color = "#baeae1";#}
+{#                                }#}
+{#                                if(data[key].index > 0.2 && data[key].index <= 0.3){#}
+{#                                    color = "#a3e4d7";#}
+{#                                }#}
+{#                                if(data[key].index > 0.25 && data[key].index <= 0.3){#}
+{#                                    color = "#8cddcd";#}
+{#                                }#}
+{#                                if(data[key].index > 0.3 && data[key].index <= 0.4){#}
+{#                                    color = "#75d6c3";#}
+{#                                }#}
+{#                                if(data[key].index > 0.35 && data[key].index <= 0.4){#}
+{#                                    color = "#5ed0b9";#}
+{#                                }#}
+{#                                if(data[key].index > 0.4 && data[key].index <= 0.5){#}
+{#                                    color = "#47c9af";#}
+{#                                }#}
+{#                                if(data[key].index > 0.45 && data[key].index <= 0.5){#}
+{#                                    color = "#30c2a5";#}
+{#                                }#}
+                                if(data[key].index <= 0.1){
+                                    color = "#1abc9c";
+                                }
+                                if(data[key].index > 0.1 && data[key].index <= 0.2){
+                                    color = "#17a98c";
+                                }
+                                if(data[key].index > 0.2 && data[key].index <= 0.3){
+                                    color = "#14967c";
+                                }
+                                if(data[key].index > 0.3 && data[key].index <= 0.4){
+                                    color = "#12836d";
+                                }
+                                if(data[key].index > 0.4 && data[key].index <= 0.5){
+                                    color = "#0f705d";
+                                }
+                                if(data[key].index > 0.5 && data[key].index <= 0.6){
+                                    color = "#0d5e4e";
+                                }
+                                if(data[key].index > 0.6 && data[key].index <= 0.7){
+                                    color = "#0a4b3e";
+                                }
+                                if(data[key].index > 0.7 && data[key].index <= 0.8){
+                                    color = "#07382e";
+                                }
+                                if(data[key].index > 0.8 && data[key].index <= 0.9){
+                                    color = "#05251f";
+                                }
+                                if(data[key].index > 0.9 && data[key].index <= 1){
+                                    color = "#02120f";
+                                }
+{#                                console.log("path_"+(data[key].partner.id+1));#}
+{##}
+{#                                 console.log(paths);#}
+                                paths[data[key].partner.id-1].svgPath.animate({fill: color}, 200);
+                            }
+                            paths[data[key].country.id-1].svgPath.animate({fill: 'purple'}, 200);
+                            var line_data=[];
+                            for(var i=0; i<data.length; i++){
+                                line_data.push({
+                                    partner: data[i].partner.rus,
+                                    value: Math.round(data[i].index*100)
+                                });
+                                if(i==4){
+                                    break;
+                                }
+                            }
+                            top5_chart.setData(line_data);
+                            var box = [];
+                            dtk.clear();
+                            for(var key in data){
+                                box.push([data[key].country.rus, data[key].partner.rus, ""+Math.round(data[key].index*100)+"%"]);
+                            }
+                            dtk.rows.add(box).draw(false);
+
+                        }
+
                     }
                 });
             });
-{#            map.getLayer('countries')#}
-{#            .on('click', function(data, path, event) {#}
-{#                // do something nice#}
-{#                for (var pth in this.getLayer('countries').getPaths()){#}
-{#                            pth.animate({fill: '#00'+(Math.floor(Math.random() * (255 - 128 + 1)) + 128)+'00'}, 200);#}
-{#                        }#}
-{#                        path.animate({fill: 'purple'}, 200);#}
-{#            });#}
+            $("#year_koef").on('change', function () {
+                $("#country_koef").change();
+            });
+            $("#country_val").on('change', function () {
+                if($(this).val()==0){
+                    $("#partner_val").prop('disabled', true);
+                    $("#dir_type_val").prop('disabled', true);
+                    $("#year_val").prop('disabled', true);
 
+                    var relations_data = [{year: "Нет данных", value: 0}];
+                    relations_chart.setData(relations_data);
+                    dtv.clear().draw();
+                    return;
+                }
+                $("#partner_val").prop('disabled', false);
+                $("#dir_type_val").prop('disabled', false);
+                $("#year_val").prop('disabled', false);
+                var fd = new FormData();
+                fd.append('country', $(this).val());
+                fd.append('partner', $('#partner_val').val());
+                fd.append('dir_type', $('#dir_type_val').val());
+                fd.append('year', $('#year_val').val());
+                fd.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'get_val' %}",
+                    data: fd,
+                    dataType: 'json',
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(data){
+                        console.log(data);
+                        if(!data){
+{#                            $("#parent_val").prop('disabled', true);#}
+{#                            $("#dir_type_val").prop('disabled', true);#}
+{#                            $("#year_val").prop('disabled', true);#}
+
+                            var relations_data = [{year: "Нет данных", value: 0}];
+                            relations_chart.setData(relations_data);
+                            dtv.clear().draw();
+                        }
+                        else {
+
+                            var relations_data=[];
+                            for(var key in data.graph){
+                                relations_data.push({
+                                    year: ""+data.graph[key].year,
+                                    value: data.graph[key].year__sum
+                                });
+                            }
+                            relations_chart.setData(relations_data);
+                            var box = [];
+                            dtv.clear();
+                            for(var key in data.data){
+                                box.push([data.data[key].country.rus, data.data[key].partner.rus, data.data[key].dir_type.rus, data.data[key].year,
+                                data.data[key].value]);
+                            }
+                            dtv.rows.add(box).draw(false);
+
+                        }
+
+                    }
+                });
+            });
+            $("#partner_val").on('change', function () {
+                $("#country_val").change();
+            });
+            $("#dir_type_val").on('change', function () {
+                $("#country_val").change();
+            });
+            $("#year_val").on('change', function () {
+                $("#country_val").change();
+            });
         });
     --></script>
 {% endblock %}

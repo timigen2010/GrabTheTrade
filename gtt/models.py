@@ -37,6 +37,7 @@ class Country(models.Model):
 
 class DirectionType(models.Model):
     name = models.CharField(max_length=255)
+    rus = models.CharField(max_length=255)
 
 
 class TemplateManager(models.Manager):
@@ -80,6 +81,9 @@ class TradeInfo(models.Model):
     used = models.BooleanField(default=0)
     info = TradeInfoManager()
 
+    class Meta:
+        unique_together = (('resource', 'country', 'partner', 'direction_type', 'year'),)
+
 
 class TaskManager(models.Manager):
     def add_task(self, name, resource, body, date_start, date_end=None):
@@ -95,11 +99,20 @@ class Task(models.Model):
     date_end = models.DateTimeField(null=True)
     task = TaskManager()
 
+class StatisticManager(models.Manager):
+    def add_statistic(self, country, partner, year, index):
+        stat = self.create(country=country, partner=partner, year=year, index=index)
+        return stat
 
 class Statistic(models.Model):
     country = models.ForeignKey(Country, related_name="statistic_country")
     partner = models.ForeignKey(Country, related_name="statistic_partner")
+    year = models.IntegerField()
     index = models.FloatField()
+    statistic = StatisticManager()
+
+    class Meta:
+        unique_together = (('country', 'partner', 'year'),)
 
 
 class AnalyzedTradeInfoManager(models.Manager):
@@ -126,27 +139,11 @@ class Prediction(models.Model):
     value = models.FloatField()
 
 
-class Article(models.Model):
-    title = models.CharField(max_length=200)
-    text = models.TextField()
-    user = models.ForeignKey(User)
-
-    def __str__(self):
-        return self.title
-
-    def get_short_text(self):
-        if len(self.text) > MAX_SHORT_TEXT_LENGTH:
-            return self.text[:MAX_SHORT_TEXT_LENGTH]
-        else:
-            return self.text
-
-
 class Data(models.Model):
     text = models.TextField()
 
-
     def grab_the_site(self, resource):
-        from .tasks import parse, analyze, unite
+        from .tasks import parse
 
         # Получение ресурса и шаблона из базы
         # resource = Resource.resource.get(id=132)
@@ -206,9 +203,9 @@ class Data(models.Model):
             return 1
         steps = []
         regulators = []
-        if maxlen <= 1000:
+        if maxlen <= 20000:
             for p in products:
-                step_el = parse.delay(resource, user_agents, proxies, p, csss)
+                step_el = parse.delay(resource, user_agents, proxies, [p], csss)
                 steps.append(step_el.id)
                 regulators.append(step_el)
             task = Task.task.add_task("Парсинг", resource, json.dumps(steps), datetime.now())
@@ -216,7 +213,7 @@ class Data(models.Model):
 
         else:
             step = maxlen / 20000
-            for x in range(2):
+            for x in range(20000):
                 print(x)
                 step_el = parse.delay(resource, user_agents, proxies, products[int(x*step):int((x+1)*step+1)], csss)
                 steps.append(step_el.id)
@@ -233,6 +230,13 @@ class Data(models.Model):
         task.date_end = datetime.now()
         task.save()
 
+        self.analyze(resource)
+
+        return 0
+
+    def analyze(self, resource):
+        from .tasks import analyze
+
         # Анализ достоверности
         analyzer = analyze.delay(resource)
 
@@ -244,6 +248,13 @@ class Data(models.Model):
 
         task.date_end = datetime.now()
         task.save()
+
+        self.aggregation(resource)
+
+        return 0
+
+    def aggregation(self, resource):
+        from .tasks import unite
 
         # Объединение данных
         unite = unite.delay(resource)
@@ -257,9 +268,24 @@ class Data(models.Model):
         task.date_end = datetime.now()
         task.save()
 
+        self.koef_eval(resource)
+
         return 0
 
+    def koef_eval(self, resource):
+        from .tasks import eval_koef
 
+        # Пересчет коэфициентов
+        koef = eval_koef.delay()
 
+        task = Task.task.add_task("Пересчет коэффициентов", resource, json.dumps([koef.id]), datetime.now(), None)
+        task.save()
 
+        while koef.status != 'SUCCESS':
+            time.sleep(1)
+
+        task.date_end = datetime.now()
+        task.save()
+
+        return 0
 
